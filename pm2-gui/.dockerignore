@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+*/node_modules
+**/node_modules
+
+# Build outputs
+packages/backend/dist
+packages/frontend/dist
+**/dist
+
+# Development files
+.git
+.gitignore
+*.md
+README*
+LICENSE
+.vscode
+.idea
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Test files
+coverage
+*.test.ts
+*.spec.ts
+__tests__
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore

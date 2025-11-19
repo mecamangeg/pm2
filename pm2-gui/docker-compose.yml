@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  pm2-gui:
+    build: .
+    container_name: pm2-control-center
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=production
+      - PORT=3001
+      - HOST=0.0.0.0
+      - AUTH_ENABLED=true
+      - JWT_SECRET=${JWT_SECRET:-your-secure-secret-change-in-production}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3001}
+    volumes:
+      # Mount PM2 socket for communication with host PM2
+      - ~/.pm2:/root/.pm2
+      # Persist user data (authentication database)
+      - pm2-gui-data:/app/packages/backend/data
+      # Persist logs
+      - pm2-gui-logs:/app/logs
+    networks:
+      - pm2-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  pm2-gui-data:
+    name: pm2-gui-data
+  pm2-gui-logs:
+    name: pm2-gui-logs
+
+networks:
+  pm2-network:
+    name: pm2-network
+    driver: bridge
