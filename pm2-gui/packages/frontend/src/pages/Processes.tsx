@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useProcessStore } from '@/stores/processStore';
 import { ProcessTable } from '@/components/process/ProcessTable';
 import { ProcessDetailPanel } from '@/components/process/ProcessDetailPanel';
-import { QuickLauncher } from '@/components/process/QuickLauncher';
+import { QuickLauncherV2 } from '@/components/process/QuickLauncherV2';
 import { processesApi } from '@/api/endpoints';
 import toast from 'react-hot-toast';
 import { Process } from '@/types';
@@ -101,7 +101,7 @@ export function Processes() {
       </div>
 
       {showLauncher && (
-        <QuickLauncher onLaunched={() => setShowLauncher(false)} />
+        <QuickLauncherV2 onLaunched={() => setShowLauncher(false)} />
       )}
 
       <div className="rounded-lg border bg-card">

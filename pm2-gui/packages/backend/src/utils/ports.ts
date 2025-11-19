@@ -279,6 +279,39 @@ export async function suggestAvailablePorts(preferredPort: number, count: number
 }
 
 /**
+ * Find next available port (integrates with port registry)
+ * @param preferredPort Starting port to check
+ * @param pm2UsedPorts Ports already used by PM2 processes (from registry)
+ * @returns Next available port or throws if none found
+ */
+export async function findAvailablePort(preferredPort: number, pm2UsedPorts: number[] = []): Promise<number> {
+  const systemPorts = await getListeningPorts();
+  const systemUsedPorts = new Set(systemPorts.map(p => p.port));
+  const pm2PortsSet = new Set(pm2UsedPorts);
+
+  // Try preferred port first
+  if (!systemUsedPorts.has(preferredPort) && !pm2PortsSet.has(preferredPort)) {
+    return preferredPort;
+  }
+
+  // Auto-increment until finding free port (max 100 attempts)
+  for (let offset = 1; offset <= 100; offset++) {
+    const candidate = preferredPort + offset;
+
+    if (candidate > 65535) {
+      throw new Error('Port number exceeds maximum (65535)');
+    }
+
+    // Check both system and PM2 registry
+    if (!systemUsedPorts.has(candidate) && !pm2PortsSet.has(candidate)) {
+      return candidate;
+    }
+  }
+
+  throw new Error(`No available ports found in range ${preferredPort}-${preferredPort + 100}`);
+}
+
+/**
  * Kill a process by PID (requires admin on Windows)
  */
 export async function killProcessByPID(pid: number): Promise<boolean> {

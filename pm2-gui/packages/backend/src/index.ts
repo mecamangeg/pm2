@@ -16,6 +16,7 @@ import processesRouter from './routes/processes';
 import systemRouter from './routes/system';
 import logsRouter from './routes/logs';
 import authRouter from './routes/auth';
+import portsRouter from './routes/ports';
 import { logger } from './utils/logger';
 
 const app = express();
@@ -70,6 +71,7 @@ if (AUTH_ENABLED) {
 app.use('/api/processes', processesRouter);
 app.use('/api/system', systemRouter);
 app.use('/api/logs', logsRouter);
+app.use('/api/ports', portsRouter);
 
 // Serve static frontend files in production
 if (process.env['NODE_ENV'] === 'production') {
